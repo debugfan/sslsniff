@@ -18,9 +18,14 @@
  */
 
 // XXX define one of these through autoconf
-//#define HAVE_PF 
+//#define HAVE_PF
+#ifdef __FreeBSD__
+#define HAVE_PF
+#else 
 #define HAVE_NETFILTER 
+#endif
 
+#include "util/Destination.hpp"
 #include <arpa/inet.h>
 
 #ifdef HAVE_NETFILTER
@@ -39,7 +44,7 @@
 #endif
 
 
-#include "util/Destination.hpp"
+//#include "util/Destination.hpp"
 
 int Destination::getOriginalDestination(boost::asio::ip::tcp::socket &socket,
 					boost::asio::ip::tcp::endpoint &originalDestination)
