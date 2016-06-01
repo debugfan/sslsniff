@@ -23,6 +23,11 @@
 #include <log4cpp/FileAppender.hh>
 #include <log4cpp/BasicLayout.hh>
 
+#include <stdlib.h>
+#include <stdio.h>
+
+char g_datadir[260] = {0};
+
 void Logger::initialize(std::string &path, bool postOnly) {
   log4cpp::Appender* app  = new log4cpp::FileAppender("FileAppender", path);
   log4cpp::Layout* layout = new log4cpp::BasicLayout();
@@ -38,7 +43,13 @@ void Logger::initialize(std::string &path, bool postOnly) {
 
 void Logger::logFromServer(std::string &name, char *buf, int len) {
   std::string data(buf, len);
-  std::string message = "Read from Server (";
+  char tmp[20] = {0};
+  //std::string message = "Read from Server (";
+  std::string message = "";
+  message.append("Bytes: ");
+  sprintf(tmp, "%d", len);
+  message.append(tmp);
+  message.append(", Read from Server (");
   message.append(name);
   message.append(") :\n");
   message.append(data);
@@ -48,7 +59,13 @@ void Logger::logFromServer(std::string &name, char *buf, int len) {
 
 void Logger::logFromClient(std::string &name, char* buf, int len) {
   std::string data(buf, len);
-  std::string message = "Read from Client (";
+  char tmp[20] = {0};
+  //std::string message = "Read from Client (";
+  std::string message = "";
+  message.append("Bytes: ");
+  sprintf(tmp, "%d", len);
+  message.append(tmp);
+  message.append(", Read from Client (");
   message.append(name);
   message.append(") :\n");
   message.append(data);

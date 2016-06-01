@@ -69,6 +69,7 @@ private:
   std::string action;
   std::string method;
   std::string request;
+  std::string version;
 
   std::string postData;
   std::string key;
@@ -96,7 +97,9 @@ public:
   std::string& getHeader(std::string& header);
   std::string& getMethod();
   std::string& getRequest();  
-  std::string& getPostData();  
+  std::string& getPostData();
+  std::string& getVersion();
+  void resetif();
 };
 
 

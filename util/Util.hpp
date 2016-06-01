@@ -27,6 +27,7 @@
 #include <list>
 
 #include <boost/asio.hpp>
+#include "debug.h"
 
 class UnresolvableCertificateException : public std::exception {
 public:
@@ -80,16 +81,40 @@ public:
   static void resolveName(std::string &name, std::list<boost::asio::ip::address> &results) {
     boost::asio::io_service io_service;
     boost::asio::ip::tcp::resolver resolver(io_service);
+
+    log_debug(stdout, "Query name: %s\n", name.c_str());
+	
     boost::asio::ip::tcp::resolver::query query(name, "https");    
-    boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
+    //boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
+    boost::asio::ip::tcp::resolver::iterator endpoint_iterator;
     boost::asio::ip::tcp::resolver::iterator end;
+    boost::asio::ip::address addr;
     
-    while (endpoint_iterator != end) {
-//       std::cout << "Resolved To: " << (*endpoint_iterator).endpoint().address().to_string() << std::endl;
-      results.push_back((*endpoint_iterator++).endpoint().address());
+//    while (endpoint_iterator != end) {
+////       std::cout << "Resolved To: " << (*endpoint_iterator).endpoint().address().to_string() << std::endl;
+//      results.push_back((*endpoint_iterator++).endpoint().address());
+//    }
+
+    try
+    {
+        for (endpoint_iterator = resolver.resolve(query); endpoint_iterator != end; endpoint_iterator++)
+        {
+            addr = (*endpoint_iterator).endpoint().address();
+            log_debug(stdout, "Resolved to ip: %s\n", addr.to_string().c_str());
+            results.push_back(addr);
+        }
+    }
+    catch (...)
+    {
+        log_error(stderr, "An error occured when resolving name: %s.\n", name.c_str());
     }
     
-    if (results.empty()) throw UnresolvableCertificateException();    
+    //if (results.empty()) throw UnresolvableCertificateException();
+    if (results.empty())
+    {
+        log_error(stderr, "results is empty. use 1.1.1.1 as a dummy\n");
+        results.push_back(boost::asio::ip::address::from_string("1.1.1.1"));
+    }
   }
 
 };

@@ -23,10 +23,14 @@
 using namespace boost::asio;
 
 void HTTPSBridge::buildRequestFromHeaders(HttpHeaders &headers, std::string &request) {
+
+	printf("[%s]->.\n", __FUNCTION__);
+	
   std::ostringstream requestStream;
   requestStream << headers.getMethod()  << " "
 	  << headers.getRequest() << " "
-	  << "HTTP/1.0\r\n";
+	  //<< "HTTP/1.0\r\n";
+      << headers.getVersion() << "\r\n";
       
   std::map<std::string,std::string>::iterator iter;
   std::map<std::string,std::string,ci_less>& headersMap = headers.getHeaders();
@@ -36,12 +40,19 @@ void HTTPSBridge::buildRequestFromHeaders(HttpHeaders &headers, std::string &req
 
     Util::trimString(key);
     Util::trimString(value);
-    
+#ifdef NO_HTTP_1_1   
     if (key != "Accept-Encoding" && key != "Connection" && key != "Keep-Alive")
       requestStream << key << ": " << value << "\r\n";
+#endif
+    requestStream << key << ": " << value << "\r\n";    
   }
-
+  
+#ifdef NO_HTTP_1_1  
   requestStream << "Connection: Close" << "\r\n\r\n";
+#endif  
+
+  requestStream << "\r\n";
+  
   if (headers.isPost()) requestStream << headers.getPostData();
 
   request = requestStream.str();
@@ -50,20 +61,45 @@ void HTTPSBridge::buildRequestFromHeaders(HttpHeaders &headers, std::string &req
 bool HTTPSBridge::readFromClient() {
   char buf[4096];
   int bytesRead;
+  int bytesWritten;
+  int error_code;
+
+  printf("[%s]->.\n", __FUNCTION__);
+  memset(buf, 0, sizeof(buf));
 
   do {
     if ((bytesRead = SSL_read(clientSession, buf, sizeof(buf))) <= 0) 
-      return SSL_get_error(clientSession, bytesRead) == SSL_ERROR_WANT_READ ? true : false;
+    	{
+    	error_code = SSL_get_error(clientSession, bytesRead);
+    	printf("[%s]SSL_read failed, bytesRead: %d, error_code: %d.\n", __FUNCTION__, bytesRead, error_code);
+        //return error_code == SSL_ERROR_WANT_READ ? true : false;
+        if(error_code == SSL_ERROR_WANT_READ) {
+            return true;
+        }
+        //if(error_code == SSL_ERROR_ZERO_RETURN) {
+        //    return true;
+        //}
+        return false;
+    	}
 
+	printf("[%s]bytesRead: %d.\n", __FUNCTION__, bytesRead);
+	printf("[%s]Read: ->\n", __FUNCTION__);
+	printf("%s\n", buf);
+	printf("[%s]<-\n", __FUNCTION__);
     Logger::logFromClient(serverName, buf, bytesRead);
 
     if (headers.process(buf, bytesRead)) {
       std::string request;
 
       buildRequestFromHeaders(headers, request);
+	  printf("[%s]Build: ->\n", __FUNCTION__);
+	  printf("%s\n", request.c_str());
+	  printf("[%s]<-\n", __FUNCTION__);
       SSL_write(serverSession, request.c_str(), request.length());
 
       if (headers.isPost()) Logger::logFromClient(serverName, headers);
+     
+      headers.resetif();
     }
   } while (SSL_pending(serverSession));
 

@@ -78,8 +78,18 @@ class Bridge : public boost::enable_shared_from_this<Bridge> {
   void writeComplete(ip::tcp::socket *socket, char *buffer, 
 		     const boost::system::error_code &error) 
   {
-    if      (!error)                                         read(socket, buffer);
-    else if (error != error::operation_aborted) close();
+    if      (!error)                                         
+	{
+		read(socket, buffer);
+    	}
+    else if (error != error::operation_aborted) 
+	{
+	      std::stringstream errorStream;
+	      errorStream << "Write error: " << error;
+	      std::string error = errorStream.str();
+	      Logger::logError(error);		
+		close();
+    	}
   }
 
  protected:

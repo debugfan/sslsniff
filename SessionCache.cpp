@@ -114,7 +114,6 @@ SSL_SESSION * SessionCache::getSessionId(SSL *s, unsigned char *id, int idLength
   return NULL;  
 }
 
-
 // Trampoline Functions.  Yay C.
 
 SSL_SESSION * SessionCache::getSessionIdTramp(SSL *s, unsigned char *id, int idLength, int *ref) {

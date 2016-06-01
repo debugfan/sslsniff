@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D0A4F206-F789-4C61-8732-C8111C9153CC}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>sslsniff</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Bridge.hpp" />
+    <ClInclude Include="certificate\AuthorityCertificateManager.hpp" />
+    <ClInclude Include="certificate\Certificate.hpp" />
+    <ClInclude Include="certificate\CertificateManager.hpp" />
+    <ClInclude Include="certificate\CertList.h" />
+    <ClInclude Include="certificate\TargetedCertificateManager.hpp" />
+    <ClInclude Include="FingerprintManager.hpp" />
+    <ClInclude Include="FirefoxAddonUpdater.hpp" />
+    <ClInclude Include="FirefoxUpdater.hpp" />
+    <ClInclude Include="global.h" />
+    <ClInclude Include="HTTPSBridge.hpp" />
+    <ClInclude Include="http\basic_tmpl.h" />
+    <ClInclude Include="http\bool_type.h" />
+    <ClInclude Include="http\common_utils.h" />
+    <ClInclude Include="http\ftrie.h" />
+    <ClInclude Include="http\HttpBridge.hpp" />
+    <ClInclude Include="http\HttpConnectionManager.hpp" />
+    <ClInclude Include="http\HttpHeaders.hpp" />
+    <ClInclude Include="http\http_template.h" />
+    <ClInclude Include="http\list_entry.h" />
+    <ClInclude Include="http\list_tmpl.h" />
+    <ClInclude Include="http\lstring.h" />
+    <ClInclude Include="http\mango.h" />
+    <ClInclude Include="http\OCSPDenier.hpp" />
+    <ClInclude Include="http\tmpl_utils.h" />
+    <ClInclude Include="http\vlist.h" />
+    <ClInclude Include="Logger.hpp" />
+    <ClInclude Include="RawBridge.hpp" />
+    <ClInclude Include="SessionCache.hpp" />
+    <ClInclude Include="SSLBridge.hpp" />
+    <ClInclude Include="SSLConnectionManager.hpp" />
+    <ClInclude Include="sslsniff.hpp" />
+    <ClInclude Include="UpdateManager.hpp" />
+    <ClInclude Include="util\debug.h" />
+    <ClInclude Include="util\Destination.hpp" />
+    <ClInclude Include="util\dump_socket.h" />
+    <ClInclude Include="util\inet_in.h" />
+    <ClInclude Include="util\json_helper.h" />
+    <ClInclude Include="util\libnet-headers.h" />
+    <ClInclude Include="util\libnet-macros.h" />
+    <ClInclude Include="util\packet_check.h" />
+    <ClInclude Include="util\packet_headers.h" />
+    <ClInclude Include="util\sys_utils.h" />
+    <ClInclude Include="util\types_def.h" />
+    <ClInclude Include="util\Util.hpp" />
+    <ClInclude Include="util\yara_utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="certificate\AuthorityCertificateManager.cpp" />
+    <ClCompile Include="certificate\CertificateManager.cpp" />
+    <ClCompile Include="certificate\CertList.cpp" />
+    <ClCompile Include="certificate\TargetedCertificateManager.cpp" />
+    <ClCompile Include="FingerprintManager.cpp" />
+    <ClCompile Include="FirefoxAddonUpdater.cpp" />
+    <ClCompile Include="FirefoxUpdater.cpp" />
+    <ClCompile Include="global.cpp" />
+    <ClCompile Include="HTTPSBridge.cpp" />
+    <ClCompile Include="http\ftrie.c" />
+    <ClCompile Include="http\HttpBridge.cpp" />
+    <ClCompile Include="http\HttpConnectionManager.cpp" />
+    <ClCompile Include="http\HttpHeaders.cpp" />
+    <ClCompile Include="http\http_template.c" />
+    <ClCompile Include="http\list_entry.c" />
+    <ClCompile Include="http\lstring.c" />
+    <ClCompile Include="http\mango.c" />
+    <ClCompile Include="http\OCSPDenier.cpp" />
+    <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="SessionCache.cpp" />
+    <ClCompile Include="SSLBridge.cpp" />
+    <ClCompile Include="SSLConnectionManager.cpp" />
+    <ClCompile Include="sslsniff.cpp" />
+    <ClCompile Include="UpdateManager.cpp" />
+    <ClCompile Include="util\Destination.cpp" />
+    <ClCompile Include="util\dump_socket.cpp" />
+    <ClCompile Include="util\json_helper.cpp" />
+    <ClCompile Include="util\packet_check.c" />
+    <ClCompile Include="util\sys_utils.c" />
+    <ClCompile Include="util\yara_utils.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties WinGDB_qVB57QUOT0lynJh0o1aKEg_bServerPortIsForwarded="false" WinGDB_qVB57QUOT0lynJh0o1aKEg_strBuildHostLogin="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strMakefileName="" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathCustomInitScript="" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathRemoteBuildDirectory="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strRemoteSolutionCleanCommand="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strRemoteSolutionBuildVariables="" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathLoadProgramPath="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strDebugTargetLogin="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strMakefileCXXFLAGS="" WinGDB_qVB57QUOT0lynJh0o1aKEg_bUseProtoCtl="false" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathServerLibraryPaths="" WinGDB_qVB57QUOT0lynJh0o1aKEg_bStopInMain="false" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathSysrootOnHost="" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathDebugInfoDirectory="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strRemoteSolutionDeployCommand="" WinGDB_qVB57QUOT0lynJh0o1aKEg_bLaunchDebuggerInSudo="false" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathDebugger="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strRemoteDeployCommand="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strRemoteBuildCommand="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strMakefileRM="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strMakefileAR="" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathExecutableOnTarget="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strRemoteCleanCommand="" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathDynamicLinker="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strTarget="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strMakefileDestDir="" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathSharedLibraryDirectories="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strMakefileCompilerC="" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathWorkingDirectory="" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathSolutionDeployTargetDirectory="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strLaunchArguments="" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathSourceDirectories="" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathCore="" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathCustomPreLoadInitScript="" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathDeployFile="" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathToolchain="" WinGDB_qVB57QUOT0lynJh0o1aKEg_bSourceSession="false" WinGDB_qVB57QUOT0lynJh0o1aKEg_strRemoteSolutionBuildCommand="" WinGDB_qVB57QUOT0lynJh0o1aKEg_bForwardX11ForDebugging="false" WinGDB_qVB57QUOT0lynJh0o1aKEg_strRemoteSolutionRebuildCommand="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strVisualizerProfile="" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathRemoteSolutionBuildDirectory="" WinGDB_qVB57QUOT0lynJh0o1aKEg_bUseSysroot="false" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathDeployTargetDirectory="" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathExecutableOnBuildHost="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strAdditionalDebuggerOptions="" WinGDB_qVB57QUOT0lynJh0o1aKEg_bReuseStandardBuildCommand="false" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathProtoCtlLogFile="" WinGDB_qVB57QUOT0lynJh0o1aKEg_bServerAutoLaunch="false" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathServerPath="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strRemoteBuildVariables="" WinGDB_qVB57QUOT0lynJh0o1aKEg_bDeployOnlyIfFileChanged="false" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathCondCustomInitScript="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strDebugHostLogin="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strMakefileLDFLAGS="" WinGDB_qVB57QUOT0lynJh0o1aKEg_bSolutionDeployOnlyIfFileChanged="false" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathSysrootOnTarget="" WinGDB_qVB57QUOT0lynJh0o1aKEg_bDisableHangReporter="false" WinGDB_qVB57QUOT0lynJh0o1aKEg_bDeployBeforeStartDebugging="false" WinGDB_qVB57QUOT0lynJh0o1aKEg_strMakefileCompilerCXX="" WinGDB_qVB57QUOT0lynJh0o1aKEg_bAutoflowRegenMakeOnBuild="false" WinGDB_qVB57QUOT0lynJh0o1aKEg_strMainFunctionName="" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathExecutable="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strRemoteRebuildCommand="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strMakefileCFLAGS="" WinGDB_qVB57QUOT0lynJh0o1aKEg_bMakefileAskBeforeOverwrite="false" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathSolutionDeployFile="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strMakefileMKDIR="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strLaunchEnvironment="" WinGDB_qVB57QUOT0lynJh0o1aKEg_pathCustomCondPreLoadInitScript="" WinGDB_qVB57QUOT0lynJh0o1aKEg_strMakefileIntDir="" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

@@ -30,9 +30,18 @@ Certificate* CertificateManager::readCredentialsFromFile(const path &file, bool 
 
 X509* CertificateManager::loadCertificateFromFile(const char* file) {
   SSL_CTX *context = SSL_CTX_new(SSLv23_server_method());
-  SSL_CTX_use_certificate_file(context, file, SSL_FILETYPE_PEM);  
-
-  return SSL_get_certificate(SSL_new(context));
+  if(SSL_CTX_use_certificate_file(context, file, SSL_FILETYPE_PEM) < 0)
+  	{
+  		printf("SSL_CTX_use_certificate_file failed.\n");
+  	}
+ 
+  //return SSL_get_certificate(SSL_new(context));
+  SSL*     tmp_ssl = SSL_new(context);
+  if(tmp_ssl == NULL)
+  	{
+  		printf("SSL_new failed\n");
+  	}
+  	return SSL_get_certificate(tmp_ssl);
 }
 
 EVP_PKEY* CertificateManager::loadKeyFromFile(const char* file) {

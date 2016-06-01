@@ -36,11 +36,24 @@ using namespace boost::asio;
 
 SSLConnectionManager::SSLConnectionManager(io_service &io_service,
 					   CertificateManager &certificateManager, 
-					   int sslListenPort)
-  : acceptor(io_service, ip::tcp::endpoint(ip::tcp::v4(), sslListenPort)),
-    certificateManager(certificateManager)
+					   int sslListenPort,
+                       int sslAppType)
+  : //acceptor(io_service, ip::tcp::endpoint(ip::tcp::v4(), sslListenPort)),
+    acceptor(io_service),
+    certificateManager(certificateManager),
+    ssl_type(sslAppType)
 {
-  acceptIncomingConnection();
+  //acceptIncomingConnection();
+    if (sslListenPort != -1)
+    {
+        boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::tcp::v4(), sslListenPort);
+        acceptor.open(endpoint.protocol());
+        acceptor.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
+        acceptor.bind(endpoint);
+        acceptor.listen();
+
+        acceptIncomingConnection();
+    }
 }
 
 void SSLConnectionManager::acceptIncomingConnection() {
@@ -62,6 +75,12 @@ void SSLConnectionManager::handleClientConnection(boost::shared_ptr<ip::tcp::soc
   bool isValidSourceTarget   = FingerprintManager::getInstance()->isValidTarget(source);
   bool isValidCertTarget     = certificateManager.isValidTarget(originalDestination, 
 								isValidWildcardTarget);
+
+  log_debug(stdout,
+    "isValidWildcardTarget: %d, isValidSourceTarget: %d, isValidCertTarget: %d\n",
+  	isValidWildcardTarget,
+  	isValidSourceTarget, 
+  	isValidCertTarget);
 
   if (isValidSourceTarget && isValidCertTarget)
     boost::thread intercept(boost::bind(&SSLConnectionManager::interceptConnection,
@@ -143,12 +162,16 @@ void SSLConnectionManager::interceptSSL(boost::shared_ptr<ip::tcp::socket> clien
 
   if (!error) {
     try {
-      boost::shared_ptr<SSLBridge> bridge((destination.port() == HTTPS_PORT) ? 
-					  new HTTPSBridge(clientSocket, &serverSocket) : 
-					  new SSLBridge(clientSocket, &serverSocket));
+      //boost::shared_ptr<SSLBridge> bridge((destination.port() == HTTPS_PORT) ? 
+		//			  new HTTPSBridge(clientSocket, &serverSocket) : 
+		//			  new SSLBridge(clientSocket, &serverSocket));
+        boost::shared_ptr<SSLBridge> bridge((ssl_type == SSL_TYPE_HTTPS) ? 
+        		        new HTTPSBridge(clientSocket, &serverSocket) : 
+        		        new SSLBridge(clientSocket, &serverSocket));
 
-      bridge->handshakeWithServer();
-      bridge->handshakeWithClient(certificateManager, wildcardOK);
+      //bridge->handshakeWithServer();
+      //bridge->handshakeWithClient(certificateManager, wildcardOK);
+      bridge->BuildMiddleSessions(certificateManager, wildcardOK);
       bridge->shuttleData();
       bridge->close();
     } catch (SSLConnectionError &error) {
@@ -157,6 +180,10 @@ void SSLConnectionManager::interceptSSL(boost::shared_ptr<ip::tcp::socket> clien
       std::string error = errorStream.str();
 
       Logger::logError(error);
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "Exception: " << e.what() << "\n";
     }
   }
 }

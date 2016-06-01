@@ -23,6 +23,8 @@
 #include "http/HttpHeaders.hpp"
 #include <string>
 
+extern char g_datadir[260];
+
 class Logger {
 
 public:

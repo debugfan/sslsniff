@@ -31,7 +31,8 @@ std::string& HttpHeaders::getHeader(std::string &header) {
 }
 
 bool HttpHeaders::isPost() {
-  return method == std::string("POST");
+  //return method == std::string("POST");
+  return 0 == method.compare("POST");
 }
 
 std::string& HttpHeaders::getMethod() {
@@ -40,6 +41,10 @@ std::string& HttpHeaders::getMethod() {
 
 std::string& HttpHeaders::getRequest() {
   return request;
+}
+
+std::string& HttpHeaders::getVersion() {
+  return version;
 }
 
 std::string& HttpHeaders::getPostData() {
@@ -70,15 +75,24 @@ void HttpHeaders::parseAction() {
   Util::trimString(action);
   size_t methodEnd  = action.find(" ");
   size_t requestEnd = action.find_last_of(" ");
+  size_t versionEnd = action.find_last_of("\r");
+  if(versionEnd == std::string::npos) {
+    size_t versionEnd = action.find_last_of("\n");
+  }
+  if(versionEnd == std::string::npos) {
+    size_t versionEnd = action.length();
+  }
   
   if (methodEnd == std::string::npos || requestEnd == std::string::npos)
     throw HttpHeaderException();
   
   method  = action.substr(0, methodEnd);
   request = action.substr(methodEnd+1, requestEnd - methodEnd);
+  version = action.substr(requestEnd+1, versionEnd - requestEnd);
   
   Util::trimString(method);
   Util::trimString(request);
+  Util::trimString(version);
 
 //   std::cerr << "Read Action: " << action << std::endl;
 //   std::cerr << "Method: " << method << std::endl;
@@ -122,8 +136,21 @@ int HttpHeaders::readKey(char *buffer, int offset, int length) {
   int i;
 
   if (offset < length && buffer[offset] == '\r') {
-    if (isPost()) this->state = READING_POST;
-    else          this->state = READING_DONE;
+    if (isPost()) 
+	{
+		if(0 == getContentLength())
+		{
+			this->state = READING_DONE;
+		}
+		else
+		{
+			this->state = READING_POST;
+		}
+    	}
+    else         
+	{
+		this->state = READING_DONE;
+    	}
     return offset + 2;
   }
 
@@ -184,4 +211,12 @@ bool HttpHeaders::process(char *buffer, int length) {
 
   if (state == READING_DONE) return true;
   else                       return false;
+}
+
+void HttpHeaders::resetif() {
+    if(state == READING_DONE) {
+        headers.clear();
+        action.clear();
+        state = READING_ACTION;
+    }
 }

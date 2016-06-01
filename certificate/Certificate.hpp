@@ -99,6 +99,11 @@ private:
 
     std::string commonName           = distinguishedName.substr(cnIndex+3);    
     std::string::size_type nullIndex = commonName.find("\\x00");
+	
+    if(nullIndex == std::string::npos)
+    	{
+    		 nullIndex = commonName.find("/");
+    	}
     
     if (nullIndex != std::string::npos) this->name = commonName.substr(0, nullIndex);
     else                                this->name = commonName;

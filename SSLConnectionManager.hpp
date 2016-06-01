@@ -32,6 +32,9 @@ class SSLConnectionManager {
 
 private:
   static const short HTTPS_PORT = 443;
+  int ssl_type;
+#define SSL_TYPE_COMMON 0
+#define SSL_TYPE_HTTPS  1
 
   CertificateManager &certificateManager;
   ip::tcp::acceptor acceptor;
@@ -64,7 +67,8 @@ public:
 
   SSLConnectionManager(io_service &io_service, 
 		       CertificateManager &certificateManager, 
-		       int sslPort);
+		       int sslPort,
+               int sslType);
   
 };
 

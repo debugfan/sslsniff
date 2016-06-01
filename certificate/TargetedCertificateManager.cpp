@@ -41,6 +41,7 @@ TargetedCertificateManager::TargetedCertificateManager(std::string &directory,
   if (!exists(certDir)) throw NoCertificateDirectoryException();
 
   if (!chain.empty()) {
+    printf("empty chain\n");
     Certificate *chain = readCredentialsFromFile(chainPath, false);
     chainList.push_back(chain);
   }
@@ -49,6 +50,7 @@ TargetedCertificateManager::TargetedCertificateManager(std::string &directory,
 
   for ( directory_iterator itr( certDir ); itr != end_itr; ++itr ) {
     if ( !is_directory(itr->status()) ) {
+      printf("path: %s\n", system_complete(itr->path()).string().c_str());  
       Certificate *target = readCredentialsFromFile(itr->path(), true);
 
       if (target->isWildcard()) certificates.push_back(target);

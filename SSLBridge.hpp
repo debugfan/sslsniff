@@ -40,6 +40,7 @@
 #include "util/Util.hpp"
 #include "certificate/Certificate.hpp"
 #include "certificate/CertificateManager.hpp"
+#include "util/dump_socket.h"
 
 #include "SessionCache.hpp"
 #include "Logger.hpp"
@@ -64,8 +65,14 @@ protected:
 
   SSL *serverSession;
   SSL *clientSession;
+  
+  FILE *client_fp;
+  FILE *server_fp;
+  socket_dumper_t dumper;
+  unsigned int session_id;
 
   virtual ip::tcp::endpoint getRemoteEndpoint();
+  virtual ip::tcp::endpoint getClientEndpoint();
   virtual bool readFromClient();
 
 private:
@@ -87,14 +94,25 @@ public:
       serverSession(), clientSession(), closed(false)
   {
     cache = SessionCache::getInstance();
+    mManager = NULL;
+    mHostname = "";
+    mCompleteServerHandshake = false;
   }
 
   ~SSLBridge() {
     close();
   }
 
+  void handshakeWithClientStage1();
+  void handshakeWithClientStage2();
+  void handshakeWithClientStage3();
   void handshakeWithClient(CertificateManager &manager, bool wildcardOK);
   void handshakeWithServer();
+  CertificateManager *mManager;
+  bool mWildcardOK;
+  std::string mHostname;
+  bool mCompleteServerHandshake;
+  void BuildMiddleSessions(CertificateManager &manager, bool wildcardOK);
   void shuttleData();
   virtual void close();
 };

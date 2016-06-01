@@ -13,3 +13,10 @@ m4
 missing
 sslsniff
 compile
+*.log
+*.pem
+Debug
+etc
+~*
+output
+*.core

@@ -47,9 +47,10 @@ HttpConnectionManager::HttpConnectionManager(io_service& io_service, int port,
     certificateManager(certificateManager),
     denyOCSP(denyOCSP)
 {
-  if (port != -1)
-    acceptIncomingConnection();
-
+    if (port != -1)
+    {
+        acceptIncomingConnection();
+    }
 }
 
 void HttpConnectionManager::acceptIncomingConnection() {
