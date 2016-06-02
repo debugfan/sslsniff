@@ -19,7 +19,9 @@
 
 #include "SSLBridge.hpp"
 #include <string.h>
+#ifdef __FreeBSD__
 #include <machine/atomic.h>
+#endif
 #include <unistd.h>
 #include "http/http_template.h"
 #include "util/json_helper.h"

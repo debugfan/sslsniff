@@ -4,7 +4,7 @@
 
 #define CONST_STRLEN(x) sizeof(x) - 1 
 
-#ifdef WIN32
+#ifndef __FreeBSD__
 char *
 strnstr(s, find, slen)
 const char *s;
